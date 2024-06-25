@@ -1,4 +1,3 @@
-edytuj_temat.php
 <?php
 session_start();
 require 'db_connect.php';
