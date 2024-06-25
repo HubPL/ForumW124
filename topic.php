@@ -56,16 +56,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $pseudo = $_POST['pseudo'];
         $default_photo = 'default.jpg';
         $default_email = 'guest@example.com';
-        $temporary_password = password_hash('temporary_password', PASSWORD_DEFAULT); // Tymczasowe hasło
+        $temporary_password = password_hash('temporary_password', PASSWORD_DEFAULT);
 
-        // Dodaj odpowiedź jako niezalogowany użytkownik
         try {
-            // Wstaw nowego użytkownika do tabeli `uzytkownicy`
             $stmtUser = $pdo->prepare("INSERT INTO uzytkownicy (login, zdjecie, email, haslo) VALUES (?, ?, ?, ?)");
             $stmtUser->execute([$pseudo, $default_photo, $default_email, $temporary_password]);
             $user_id = $pdo->lastInsertId();
 
-            // Wstaw odpowiedź do tabeli `odpowiedzi`
             $stmt = $pdo->prepare("INSERT INTO odpowiedzi (tresc, data_publikacji, id_uzytkownika, id_tematu) VALUES (?, NOW(), ?, ?)");
             $stmt->execute([$replyContent, $user_id, $topic_id]);
             header('Location: topic.php?id=' . $topic_id);
